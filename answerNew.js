@@ -1,7 +1,6 @@
-// const { title } = require('process');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const puppeteer = require('puppeteer');
-// const XLSX = require('xlsx');
+import puppeteer from 'puppeteer';
+import fs from 'fs'; // Додаємо модуль fs
 
 (async () => {
   // Запускаємо браузер
@@ -15,7 +14,7 @@ const puppeteer = require('puppeteer');
     const items = document.querySelectorAll('[data-test="outfitProduct"]');
 
     const itemArray = Array.from(items)
-      // .slice(0, 10)
+      .slice(0, 30)
       .map((item) => {
         const textDiv = item.querySelector(
           '.ProductItem__productCardName__DCKIH',
@@ -32,7 +31,6 @@ const puppeteer = require('puppeteer');
 
         const images = Array.from(imagesSourse).map((i) => {
           const imageUrl = i.srcset;
-
           return imageUrl;
         });
 
@@ -46,28 +44,30 @@ const puppeteer = require('puppeteer');
           title: span.textContent.trim(),
           link: `https://answear.ua${link}`,
           price,
-
-          images: {
-            main: images[3].split('\n')[1].trim().split(' ')[0],
-          },
-          alt:
-            alt.split(' ').find((word) => word.toLowerCase() === 'пальто') ||
-            alt.split(' ').find((word) => word.toLowerCase() === 'тренч'),
-          category:
-            alt.split(' ').find((word) => word.toLowerCase() === 'пальто') ||
-            alt.split(' ').find((word) => word.toLowerCase() === 'тренч'),
-          description: alt,
-          color:
-            alt.split(' ').indexOf('колір') !== -1
-              ? alt.split(' ')[alt.split(' ').indexOf('колір') + 1]
-              : null,
+          colors: [
+            {
+              color:
+                alt.split(' ').indexOf('колір') !== -1
+                  ? alt.split(' ')[alt.split(' ').indexOf('колір') + 1]
+                  : null,
+              images: { front: images[3].split('\n')[1].trim().split(' ')[0] },
+              other: [],
+            },
+          ],
         };
         return card;
       });
     return itemArray;
   });
 
-  console.log(results);
+  // Зберігаємо результати у змінну finalProducts
+  const finalProducts = results;
+
+  // Записуємо finalProducts у файл
+  const fileContent = `const finalProducts = ${JSON.stringify(finalProducts, null, 2)};\n\nexport default finalProducts;`;
+  fs.writeFileSync('finalProducts.js', fileContent, 'utf8');
+
+  console.log('Дані збережено у файл finalProducts.js');
 
   await browser.close();
 })();
