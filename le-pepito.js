@@ -1,8 +1,8 @@
-const puppeteer = require('puppeteer');
+import { launch } from 'puppeteer';
 
 (async () => {
   // Запускаємо браузер
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await launch({ headless: false });
   const page = await browser.newPage();
   await page.goto(
     'https://food.bolt.eu/uk-UA/158-kyiv/p/20827-pasta-la-pepito',

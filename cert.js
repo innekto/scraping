@@ -1,9 +1,9 @@
-const puppeteer = require('puppeteer');
-const XLSX = require('xlsx');
+import { launch } from 'puppeteer';
+import XLSX from 'xlsx';
 
 (async () => {
   // Запускаємо браузер
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await launch({ headless: false });
   const page = await browser.newPage();
   await page.goto(
     'https://partners.veeva.com/meet-veeva/partners/content/partner-finder',
