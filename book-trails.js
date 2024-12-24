@@ -39,7 +39,9 @@ import { writeFileSync } from 'fs';
         const genre = lis[0].innerText.replace(/^Genre:\s*/, '');
         const published = lis[1].innerText.replace(/^Published:\s*/, '');
 
-        return { title, description, authors, genre, published };
+        const image = el.querySelector('img.class-q6JZ8js').src;
+
+        return { image, title, description, authors, genre, published };
       });
       return result;
     });
