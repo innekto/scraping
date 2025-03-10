@@ -1,0 +1,1 @@
+export const links=['https://laboratory.ua/products/za-perekopom-e-zemlya']
