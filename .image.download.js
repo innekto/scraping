@@ -1,6 +1,6 @@
 import { launch } from 'puppeteer';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, extname } from 'path';
 import { fileURLToPath } from 'url';
 import { randomBooks } from './.links.js'; // Імпортуємо масив з посиланнями на книги
 
@@ -19,6 +19,8 @@ import { randomBooks } from './.links.js'; // Імпортуємо масив з
     console.log('Папка для збереження зображень створена.');
   }
 
+  let counter = 1; // Лічильник для назв файлів
+
   // Пройдемо по кожному об'єкту в randomBooks
   for (const book of randomBooks) {
     const imageUrl = book.image; // Отримуємо URL зображення
@@ -31,10 +33,16 @@ import { randomBooks } from './.links.js'; // Імпортуємо масив з
         // Завантажуємо зображення, якщо це зображення
         const imageBuffer = await response.buffer();
 
-        // Формуємо шлях для збереження
-        const imagePath = join(imagesFolderPath, imageUrl.split('/').pop());
+        // Отримуємо розширення файлу
+        const extension = extname(imageUrl) || '.jpg';
+
+        // Формуємо шлях для збереження (1.jpg, 2.jpg, ...)
+        const imagePath = join(imagesFolderPath, `${counter}${extension}`);
+
         writeFileSync(imagePath, imageBuffer);
         console.log(`Зображення збережено: ${imagePath}`);
+
+        counter++; // Збільшуємо лічильник для наступного файлу
       } else {
         console.log(`Це не зображення: ${imageUrl}`);
       }
