@@ -22,16 +22,16 @@ const __dirname = dirname(__filename);
       const elements = Array.from(document.querySelectorAll('.class-TEan-75'));
       return elements.map((el) => {
         const h2Element = el.querySelector('h2.class-PdmOpB7');
-        const title = h2Element?.querySelector('a')?.innerText || null;
-        const authors =
-          el.querySelector('.class-weYteKA')?.innerText.replace(/^by\s*/, '') ||
-          null;
+        // const title = h2Element?.querySelector('a')?.innerText || null;
+        // const authors =
+        //   el.querySelector('.class-weYteKA')?.innerText.replace(/^by\s*/, '') ||
+        //   null;
         const description =
           el.querySelector('div.class-wzhdcT0')?.innerText || null;
         const underDesc = el.querySelector('ul.class-3i6XWos');
         const lis = Array.from(underDesc?.querySelectorAll('li') || []);
-        const genre =
-          lis.length > 0 ? lis[0].innerText.replace(/^Genre:\s*/, '') : null;
+        // const genre =
+        //   lis.length > 0 ? lis[0].innerText.replace(/^Genre:\s*/, '') : null;
 
         const image = el.querySelector('img.class-q6JZ8js')?.src || null;
 
@@ -68,7 +68,6 @@ const __dirname = dirname(__filename);
 
   console.log('Знайдені елементи:', allElements.length);
 
-  // Вибираємо 50 випадкових книг
   const randomBooks = [];
   const availableBooks = [...allElements];
   while (randomBooks.length < 50 && availableBooks.length > 0) {
@@ -76,14 +75,12 @@ const __dirname = dirname(__filename);
     randomBooks.push(availableBooks.splice(randomIndex, 1)[0]);
   }
 
-  // Вивести URL всіх картинок цих випадкових книг
   randomBooks.forEach((book, index) => {
     if (book.image) {
       console.log(`Картинка книги ${index + 1}: ${book.image}`);
     }
   });
 
-  // Записуємо 50 випадкових книг у файл у корінь проєкту
   try {
     const filePath = join(__dirname, 'links.js');
     const dataToWrite = `export const randomBooks = ${JSON.stringify(randomBooks, null, 2)};\nexport default randomBooks;`;

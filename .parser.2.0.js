@@ -10,17 +10,14 @@ import { randomBooks } from './.links.js';
     const description = randomBooks[index].description;
     const image = randomBooks[index].image;
 
-    // Створюємо новий браузер для кожної лінки
     const browser = await launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
 
-    // Чекаємо появи h1 із потрібними класами (максимум 15 секунд)
     await page.waitForSelector('h1.title.size-sm.lg\\:size-xl.mt-4', {
       timeout: 2000,
     });
 
-    // Отримуємо текст заголовка книги та іншу інформацію
     const data = await page.evaluate(() => {
       const titleElement = document.querySelector(
         'h1.title.size-sm.lg\\:size-xl.mt-4',
@@ -42,7 +39,6 @@ import { randomBooks } from './.links.js';
       ).innerText;
 
       const ul = Array.from(document.querySelectorAll('td.py-0\\.5'));
-
       const pages = ul[2].innerText;
 
       return {
@@ -58,12 +54,11 @@ import { randomBooks } from './.links.js';
         homedir(),
         'Desktop',
         'book-trails-utils',
-        'bookTitle.json', // Збереження в форматі .json
+        'bookTitle.json',
       );
 
       let currentTitles = [];
 
-      // Якщо файл існує, спробуємо його прочитати
       if (existsSync(desktopPath)) {
         const fileContent = readFileSync(desktopPath, 'utf-8');
 
@@ -76,7 +71,6 @@ import { randomBooks } from './.links.js';
         }
       }
 
-      // Додаємо новий заголовок і категорію у масив
       currentTitles.push({
         title: data.title,
         category: data.category,
@@ -86,18 +80,14 @@ import { randomBooks } from './.links.js';
         image,
       });
 
-      // Записуємо оновлений масив в файл у форматі JSON
-      const dataToWrite = JSON.stringify(currentTitles, null, 2); // Форматуємо JSON для читабельності
+      const dataToWrite = JSON.stringify(currentTitles, null, 2);
       writeFileSync(desktopPath, dataToWrite);
       console.log(`Дані успішно збережені у файл: ${desktopPath}`);
     } catch (error) {
       console.error('Помилка при збереженні файлу:', error);
     }
 
-    // Закриваємо браузер після кожного переходу
     await browser.close();
-
-    // Затримка між проходами, щоб не натрапити на капчу (наприклад, 5 секунд)
     await new Promise((resolve) => setTimeout(resolve, 3000));
   }
 })();
